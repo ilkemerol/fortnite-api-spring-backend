@@ -3,6 +3,10 @@ package com.fortnite.service;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 
+
+/*
+ * ilkemerol
+ */
 public class FortniteApiCall {
 	
 	public static void main(String[] args) {
