@@ -28,5 +28,10 @@ public class ServiceController {
 	public String upComingItems(){
 		return service.getUpcomingItems();
 	}
+	
+	@RequestMapping("/playerStats")
+	public String playerStats(@RequestParam(value = "id",defaultValue = "1") String id) {
+		return service.getPlayerStats(id);
+	}
 
 }
