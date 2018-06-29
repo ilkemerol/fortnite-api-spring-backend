@@ -17,6 +17,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Override
 	public String getStore() {
+		
 		HttpResponse httpResponse = HttpRequest
 				.post("https://fortnite-public-api.theapinetwork.com/prod09/store/get")
 				.header("Authorization", fortniteApiKey)
@@ -37,6 +38,20 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.contentType("multipart/form-data")
 				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
 				.form("username", username)
+				.send();
+		
+		return httpResponse.bodyText();
+	}
+
+	@Override
+	public String getUpcomingItems() {
+		
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/upcoming/get")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.form("language", "en")
 				.send();
 		
 		return httpResponse.bodyText();

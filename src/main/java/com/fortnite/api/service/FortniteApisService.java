@@ -8,4 +8,6 @@ public interface FortniteApisService {
 	
 	public String getStore();
 	
+	public String getUpcomingItems();
+	
 }
