@@ -10,4 +10,6 @@ public interface FortniteApisService {
 	
 	public String getUpcomingItems();
 	
+	public String getPlayerStats(String userId);
+	
 }
