@@ -23,5 +23,10 @@ public class ServiceController {
 	public String brDailyStore(){
 		return service.getStore();
 	}
+	
+	@RequestMapping("/upComingItems")
+	public String upComingItems(){
+		return service.getUpcomingItems();
+	}
 
 }
