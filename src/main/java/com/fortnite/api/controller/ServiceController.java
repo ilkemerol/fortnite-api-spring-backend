@@ -30,7 +30,7 @@ public class ServiceController {
 	}
 	
 	@RequestMapping("/playerStats")
-	public String playerStats(@RequestParam(value = "id",defaultValue = "1") String id) {
+	public String playerStats(@RequestParam(value = "id",defaultValue = "4735ce9132924caf8a5b17789b40f79c") String id) {
 		return service.getPlayerStats(id);
 	}
 
