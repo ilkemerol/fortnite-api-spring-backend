@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fortnite.api.model.UserPojo;
 import com.fortnite.api.service.FortniteApisService;
+import com.google.gson.Gson;
 
 
 @RestController
@@ -30,8 +32,10 @@ public class ServiceController {
 	}
 	
 	@RequestMapping("/playerStats")
-	public String playerStats(@RequestParam(value = "id",defaultValue = "1") String id) {
-		return service.getPlayerStats(id);
+	public String playerStats(@RequestParam(value = "name", defaultValue = "Ninja") String name) {
+		Gson gson = new Gson();
+	    UserPojo obj  = gson.fromJson(service.getUserId(name), UserPojo.class);
+		return service.getPlayerStats(obj.getUid());
 	}
 
 }
