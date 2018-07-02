@@ -12,4 +12,6 @@ public interface FortniteApisService {
 	
 	public String getPlayerStats(String userId);
 	
+	public String getNews();
+	
 }

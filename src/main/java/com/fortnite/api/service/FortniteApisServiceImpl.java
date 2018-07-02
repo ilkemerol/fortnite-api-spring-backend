@@ -12,7 +12,7 @@ import jodd.http.HttpResponse;
 @Service
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
-	@Value("${fortnite.emreozumApiKey}")
+	@Value("${fortnite.ilkemerolApiKey}")
 	private String fortniteApiKey;
 	
 	@Override
@@ -67,6 +67,19 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("platform", "pc")
 				.form("window", "alltime")
 				.send();
+		return httpResponse.bodyText();
+	}
+
+	@Override
+	public String getNews() {
+		
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/br_motd/get")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.send();
+		
 		return httpResponse.bodyText();
 	}
 
