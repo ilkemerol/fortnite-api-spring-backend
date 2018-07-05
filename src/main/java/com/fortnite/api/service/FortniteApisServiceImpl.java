@@ -1,6 +1,8 @@
 package com.fortnite.api.service;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.fortnite.api.model.JsonObject;
@@ -11,6 +13,8 @@ import jodd.http.HttpResponse;
 
 @Service
 public class FortniteApisServiceImpl implements FortniteApisService{
+	
+	static Logger logger = Logger.getLogger(FortniteApisServiceImpl.class.getName());
 	
 	@Value("${fortnite.ilkemerolApiKey}")
 	private String fortniteApiKey;
@@ -26,6 +30,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
+		logger.info("APIs getStore triggered!");
 		return httpResponse.bodyText();
 	}
 	
@@ -54,6 +59,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
+		logger.info("APIs getUpcomingItems triggered!");
 		return httpResponse.bodyText();
 	}
 
@@ -71,6 +77,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
+	@Cacheable("getNews")
 	public String getNews() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -80,6 +87,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
 				.send();
 		
+		logger.info("APIs getNews triggered!");
 		return httpResponse.bodyText();
 	}
 
