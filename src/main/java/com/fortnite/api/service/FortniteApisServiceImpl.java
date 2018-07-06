@@ -91,4 +91,20 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 		return httpResponse.bodyText();
 	}
 
+	@Override
+	@Cacheable("serverStatus")
+	public String getServerStatus() {
+		
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/status/fortnite_server_status")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.form("language", "en")
+				.send();
+		
+		logger.info("APIs getServerStatus triggered!");
+		return httpResponse.bodyText();
+	}
+
 }

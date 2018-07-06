@@ -42,5 +42,10 @@ public class ServiceController {
 	public String patchNotes(){
 		return service.getNews();
 	}
+	
+	@RequestMapping("/serverStatus")
+	public String serverStatus(){
+		return service.getServerStatus();
+	}
 
 }

@@ -14,4 +14,5 @@ public interface FortniteApisService {
 	
 	public String getNews();
 	
+	public String getServerStatus();
 }
