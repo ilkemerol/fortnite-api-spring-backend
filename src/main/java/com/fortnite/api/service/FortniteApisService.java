@@ -15,4 +15,6 @@ public interface FortniteApisService {
 	public String getNews();
 	
 	public String getServerStatus();
+	
+	public String getTopTen();
 }

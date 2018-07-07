@@ -105,6 +105,23 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 		
 		logger.info("APIs getServerStatus triggered!");
 		return httpResponse.bodyText();
+		
+		//"{\"status\":\"DOWN\",\"message\":\"Fortnite is up.\",\"version\":\"4.5\",\"time\":{\"since\":{\"seconds\":\"1530092223\"},\"duration\":{\"seconds\":859012,\"formated\":\"09 days, 22 hour, 36 minuts and 52 seconds\"}}}
+	}
+
+	@Override
+	public String getTopTen() {
+		
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/leaderboards/get")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.form("window", "top_10_kills")
+				.send();
+		
+		logger.info("APIs getTopTen triggered!");
+		return httpResponse.bodyText();
 	}
 
 }

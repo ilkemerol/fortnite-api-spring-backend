@@ -47,5 +47,10 @@ public class ServiceController {
 	public String serverStatus(){
 		return service.getServerStatus();
 	}
+	
+	@RequestMapping("topTen")
+	public String topTen(){
+		return service.getTopTen();
+	}
 
 }
