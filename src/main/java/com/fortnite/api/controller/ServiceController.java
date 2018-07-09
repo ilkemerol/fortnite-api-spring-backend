@@ -37,5 +37,25 @@ public class ServiceController {
 	    UserPojo obj  = gson.fromJson(service.getUserId(name), UserPojo.class);
 		return service.getPlayerStats(obj.getUid());
 	}
+	
+	@RequestMapping("/news")
+	public String news(){
+		return service.getNews();
+	}
+	
+	@RequestMapping("/serverStatus")
+	public String serverStatus(){
+		return service.getServerStatus();
+	}
+	
+	@RequestMapping("/topTen")
+	public String topTen(){
+		return service.getTopTen();
+	}
+	
+	@RequestMapping("/patchNotes")
+	public String patchNotes(){
+		return service.getPatchNotes();
+	}
 
 }
