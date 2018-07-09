@@ -17,4 +17,6 @@ public interface FortniteApisService {
 	public String getServerStatus();
 	
 	public String getTopTen();
+	
+	public String getPatchNotes();
 }

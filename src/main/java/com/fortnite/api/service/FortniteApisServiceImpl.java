@@ -45,6 +45,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("username", username)
 				.send();
 		
+		logger.info("APIs getUserId triggered!");
 		return httpResponse.bodyText();
 	}
 
@@ -65,6 +66,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 
 	@Override
 	public String getPlayerStats(String userId) {
+		
 		HttpResponse httpResponse = HttpRequest
 				.post("https://fortnite-public-api.theapinetwork.com/prod09/users/public/br_stats")
 				.header("Authorization", fortniteApiKey)
@@ -73,6 +75,8 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("platform", "pc")
 				.form("window", "alltime")
 				.send();
+		
+		logger.info("APIs getPlayerStats triggered!");
 		return httpResponse.bodyText();
 	}
 
@@ -121,6 +125,18 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.send();
 		
 		logger.info("APIs getTopTen triggered!");
+		return httpResponse.bodyText();
+	}
+
+	@Override
+	public String getPatchNotes() {
+		
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/patchnotes/get")
+				.header("Authorization", fortniteApiKey)
+				.send();
+		
+		logger.info("APIs getPatchNotes triggered!");
 		return httpResponse.bodyText();
 	}
 

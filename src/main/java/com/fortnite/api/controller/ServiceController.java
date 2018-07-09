@@ -39,7 +39,7 @@ public class ServiceController {
 	}
 	
 	@RequestMapping("/news")
-	public String patchNotes(){
+	public String news(){
 		return service.getNews();
 	}
 	
@@ -48,9 +48,14 @@ public class ServiceController {
 		return service.getServerStatus();
 	}
 	
-	@RequestMapping("topTen")
+	@RequestMapping("/topTen")
 	public String topTen(){
 		return service.getTopTen();
+	}
+	
+	@RequestMapping("/patchNotes")
+	public String patchNotes(){
+		return service.getPatchNotes();
 	}
 
 }
