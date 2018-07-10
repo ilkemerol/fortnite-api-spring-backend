@@ -57,5 +57,10 @@ public class ServiceController {
 	public String patchNotes(){
 		return service.getPatchNotes();
 	}
+	
+	@RequestMapping("/hardResetCache")
+	public void clearCache(){
+		service.clearCache();
+	}
 
 }

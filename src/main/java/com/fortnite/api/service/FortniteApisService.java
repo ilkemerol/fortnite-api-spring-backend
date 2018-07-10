@@ -19,4 +19,7 @@ public interface FortniteApisService {
 	public String getTopTen();
 	
 	public String getPatchNotes();
+	
+	/* Cache Clear */
+	public void clearCache();
 }
