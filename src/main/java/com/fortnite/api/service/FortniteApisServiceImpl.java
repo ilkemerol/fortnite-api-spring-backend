@@ -119,7 +119,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable()
+	@Cacheable("getTopTen")
 	public String getTopTen() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -135,7 +135,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable()
+	@Cacheable("getPatchNotes")
 	public String getPatchNotes() {
 		
 		HttpResponse httpResponse = HttpRequest
