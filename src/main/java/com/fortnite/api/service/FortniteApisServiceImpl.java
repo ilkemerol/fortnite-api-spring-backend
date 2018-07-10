@@ -2,6 +2,8 @@ package com.fortnite.api.service;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 
 @Service
+@CacheConfig (cacheNames = "apiService")
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	static Logger logger = Logger.getLogger(FortniteApisServiceImpl.class.getName());
@@ -20,6 +23,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	private String fortniteApiKey;
 	
 	@Override
+	@Cacheable()
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -50,6 +54,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
+	@Cacheable()
 	public String getUpcomingItems() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -81,7 +86,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable("getNews")
+	@Cacheable()
 	public String getNews() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -96,7 +101,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable("serverStatus")
+	@Cacheable()
 	public String getServerStatus() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -114,6 +119,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
+	@Cacheable()
 	public String getTopTen() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -129,6 +135,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
+	@Cacheable()
 	public String getPatchNotes() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -139,5 +146,9 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 		logger.info("APIs getPatchNotes triggered!");
 		return httpResponse.bodyText();
 	}
+
+	@Override
+	@CacheEvict (allEntries = true)
+	public void clearCache() {	}
 
 }
