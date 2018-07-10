@@ -23,7 +23,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	private String fortniteApiKey;
 	
 	@Override
-	@Cacheable()
+	@Cacheable("getStore")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -54,7 +54,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable()
+	@Cacheable("getUpcomingItems")
 	public String getUpcomingItems() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -86,7 +86,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable()
+	@Cacheable("getNews")
 	public String getNews() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -101,7 +101,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Cacheable()
+	@Cacheable("getServerStatus")
 	public String getServerStatus() {
 		
 		HttpResponse httpResponse = HttpRequest
