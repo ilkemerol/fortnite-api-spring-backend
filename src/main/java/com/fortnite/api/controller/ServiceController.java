@@ -58,6 +58,11 @@ public class ServiceController {
 		return service.getPatchNotes();
 	}
 	
+	@RequestMapping("/BrChallenges")
+	public String getBrChallenges(){
+		return service.getBrChallenges();
+	}
+	
 	@RequestMapping("/hardResetCache")
 	public void clearCache(){
 		service.clearCache();

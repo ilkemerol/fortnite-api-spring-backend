@@ -151,4 +151,22 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	@CacheEvict (allEntries = true)
 	public void clearCache() {	}
 
+	@Override
+	@Cacheable("getBrChallenges")
+	public String getBrChallenges() {
+		
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/challenges/get")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.form("season", "season5")
+				.form("language", "en")
+				.send();
+		
+		logger.info("APIs getBrChallenges triggered!");
+		return httpResponse.bodyText();
+		
+	}
+
 }
