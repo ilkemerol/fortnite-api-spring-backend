@@ -20,6 +20,8 @@ public interface FortniteApisService {
 	
 	public String getPatchNotes();
 	
+	public String getBrChallenges();
+	
 	/* Cache Clear */
 	public void clearCache();
 }
