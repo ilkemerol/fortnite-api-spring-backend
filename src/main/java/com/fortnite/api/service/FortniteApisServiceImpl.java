@@ -30,7 +30,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Override
 	//@Cacheable("getStore")
-	@Scheduled(cron = "0 0 0/1 1/1 * ? *")
+	@Scheduled(cron = "0 0/60 * * * ?")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
