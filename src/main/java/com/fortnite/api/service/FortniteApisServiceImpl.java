@@ -23,13 +23,13 @@ import jodd.http.HttpResponse;
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
-	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	
 	@Value("${fortnite.ilkemerolApiKey}")
 	private String fortniteApiKey;
 	
 	@Override
-	//@Cacheable("getStore")
+	@Cacheable("getStore")
 	@Scheduled(cron = "0 0/60 * * * ?")
 	public String getStore() {
 		
@@ -56,7 +56,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("username", username)
 				.send();
 		
-		logger.info("APIs getUserId triggered!");
+		logger.info("APIs getUserId triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 
@@ -72,7 +72,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
-		logger.info("APIs getUpcomingItems triggered!");
+		logger.info("APIs getUpcomingItems triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 
@@ -88,7 +88,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("window", "alltime")
 				.send();
 		
-		logger.info("APIs getPlayerStats triggered!");
+		logger.info("APIs getPlayerStats triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 
@@ -103,7 +103,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
 				.send();
 		
-		logger.info("APIs getNews triggered!");
+		logger.info("APIs getNews triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 
@@ -119,7 +119,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
-		logger.info("APIs getServerStatus triggered!");
+		logger.info("APIs getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 		
 		//"{\"status\":\"DOWN\",\"message\":\"Fortnite is up.\",\"version\":\"4.5\",\"time\":{\"since\":{\"seconds\":\"1530092223\"},\"duration\":{\"seconds\":859012,\"formated\":\"09 days, 22 hour, 36 minuts and 52 seconds\"}}}
@@ -137,7 +137,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("window", "top_10_kills")
 				.send();
 		
-		logger.info("APIs getTopTen triggered!");
+		logger.info("APIs getTopTen triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 
@@ -150,7 +150,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.header("Authorization", fortniteApiKey)
 				.send();
 		
-		logger.info("APIs getPatchNotes triggered!");
+		logger.info("APIs getPatchNotes triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 
@@ -171,7 +171,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
-		logger.info("APIs getBrChallenges triggered!");
+		logger.info("APIs getBrChallenges triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 		
 	}
