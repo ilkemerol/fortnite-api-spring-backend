@@ -1,10 +1,15 @@
 package com.fortnite.api.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fortnite.api.db.DbOperations;
+import com.fortnite.api.entity.ServerStatus;
 import com.fortnite.api.model.Dummy;
 import com.fortnite.api.model.UserPojo;
 import com.fortnite.api.repository.DummyRepository;
@@ -19,7 +24,11 @@ public class ServiceController {
 	private FortniteApisService service;
 	
 	@Autowired
-	private DummyRepository dummyRepository;
+	private DbOperations dbOperations;
+	
+	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+	
+  private DummyRepository dummyRepository;
 	
 	@RequestMapping("/userId")
 	public String userId(@RequestParam(value="name", defaultValue="Ninja") String name) {
@@ -50,6 +59,11 @@ public class ServiceController {
 	
 	@RequestMapping("/serverStatus")
 	public String serverStatus(){
+		ServerStatus serverStatus = new ServerStatus();
+		serverStatus.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		serverStatus.setData(service.getServerStatus());
+		dbOperations.save(serverStatus);
+		
 		return service.getServerStatus();
 	}
 	
