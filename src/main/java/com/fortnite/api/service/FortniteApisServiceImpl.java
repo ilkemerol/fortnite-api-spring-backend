@@ -1,10 +1,15 @@
 package com.fortnite.api.service;
 
-import org.apache.log4j.Logger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fortnite.api.model.JsonObject;
@@ -17,13 +22,15 @@ import jodd.http.HttpResponse;
 @CacheConfig (cacheNames = "apiService")
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
-	static Logger logger = Logger.getLogger(FortniteApisServiceImpl.class.getName());
+	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
+	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 	
 	@Value("${fortnite.ilkemerolApiKey}")
 	private String fortniteApiKey;
 	
 	@Override
-	@Cacheable("getStore")
+	//@Cacheable("getStore")
+	@Scheduled(cron = "0 0 0/1 1/1 * ? *")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -34,7 +41,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
-		logger.info("APIs getStore triggered!");
+		logger.info("APIs getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
 	
