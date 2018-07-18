@@ -12,4 +12,16 @@ public interface FortniteApisService {
 	
 	public String getPlayerStats(String userId);
 	
+	public String getNews();
+	
+	public String getServerStatus();
+	
+	public String getTopTen();
+	
+	public String getPatchNotes();
+	
+	public String getBrChallenges();
+	
+	/* Cache Clear */
+	public void clearCache();
 }
