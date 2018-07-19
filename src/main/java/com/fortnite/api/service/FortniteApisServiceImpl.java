@@ -189,40 +189,28 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Scheduled(cron = "0 0/20 * * * ?")
+	@Scheduled(cron = "0 0/60 * * * ?")
 	public void insertDailyStore() {
-		HttpResponse httpResponse = HttpRequest
-				.post("https://fortnite-public-api.theapinetwork.com/prod09/store/get")
-				.header("Authorization", fortniteApiKey)
-				.contentType("multipart/form-data")
-				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
-				.form("language", "en")
-				.send();
+		String responseBody = getStore();
+		logger.info("Response Body ### Value - {}", responseBody);
 		
 		DailyItemShop dailyItemShopEntity = new DailyItemShop();
 		dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		dailyItemShopEntity.setData(httpResponse.bodyText());
+		dailyItemShopEntity.setData(responseBody);
 		dailyItemShop.save(dailyItemShopEntity);
-		
 		logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 	}
 
 	@Override
-	@Scheduled(cron = "0 0/20 * * * ?")
+	@Scheduled(cron = "0 0/60 * * * ?")
 	public void insertServerStatus() {
-		HttpResponse httpResponse = HttpRequest
-				.post("https://fortnite-public-api.theapinetwork.com/prod09/status/fortnite_server_status")
-				.header("Authorization", fortniteApiKey)
-				.contentType("multipart/form-data")
-				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
-				.form("language", "en")
-				.send();
+		String responseBody = getServerStatus();
+		logger.info("Response Body ### Value - {}", responseBody);
 		
 		ServerStatus serverStatusEntity = new ServerStatus();
 		serverStatusEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		serverStatusEntity.setData(httpResponse.bodyText());
+		serverStatusEntity.setData(responseBody);
 		serverStatus.save(serverStatusEntity);
-		
 		logger.info("DB stored getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		
 	}
