@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -12,6 +13,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.fortnite.api.db.DbOperations;
+import com.fortnite.api.entity.ServerStatus;
 import com.fortnite.api.model.JsonObject;
 import com.fortnite.api.util.ApiKeyUtil;
 
@@ -22,6 +25,9 @@ import jodd.http.HttpResponse;
 @CacheConfig (cacheNames = "apiService")
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
+	@Autowired
+	private DbOperations dbOperations;
+	
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	
@@ -30,7 +36,6 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Override
 	@Cacheable("getStore")
-	@Scheduled(cron = "0 0/60 * * * ?")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -109,6 +114,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 
 	@Override
 	@Cacheable("getServerStatus")
+	@Scheduled(cron = "0 0/60 * * * ?")
 	public String getServerStatus() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -120,6 +126,14 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.send();
 		
 		logger.info("APIs getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		
+		ServerStatus serverStatus = new ServerStatus();
+		serverStatus.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		serverStatus.setData(httpResponse.bodyText());
+		dbOperations.save(serverStatus);
+		
+		logger.info("DB stored getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		
 		return httpResponse.bodyText();
 		
 		//"{\"status\":\"DOWN\",\"message\":\"Fortnite is up.\",\"version\":\"4.5\",\"time\":{\"since\":{\"seconds\":\"1530092223\"},\"duration\":{\"seconds\":859012,\"formated\":\"09 days, 22 hour, 36 minuts and 52 seconds\"}}}
