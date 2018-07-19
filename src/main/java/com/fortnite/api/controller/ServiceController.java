@@ -21,12 +21,6 @@ public class ServiceController {
 	@Autowired
 	private FortniteApisService service;
 	
-	@Autowired
-	private DbOperations dbOperations;
-	
-	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-	
-	
 	@RequestMapping("/userId")
 	public String userId(@RequestParam(value="name", defaultValue="Ninja") String name) {
         return service.getUserId(name);
@@ -56,11 +50,6 @@ public class ServiceController {
 	
 	@RequestMapping("/serverStatus")
 	public String serverStatus(){
-		ServerStatus serverStatus = new ServerStatus();
-		serverStatus.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		serverStatus.setData(service.getServerStatus());
-		dbOperations.save(serverStatus);
-		
 		return service.getServerStatus();
 	}
 	
