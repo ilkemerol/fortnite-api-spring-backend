@@ -13,7 +13,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.fortnite.api.db.DbOperations;
+import com.fortnite.api.db.DbOperationsDailyItemShop;
+import com.fortnite.api.db.DbOperationsServerStatus;
+import com.fortnite.api.entity.DailyItemShop;
 import com.fortnite.api.entity.ServerStatus;
 import com.fortnite.api.model.JsonObject;
 import com.fortnite.api.util.ApiKeyUtil;
@@ -26,7 +28,10 @@ import jodd.http.HttpResponse;
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Autowired
-	private DbOperations dbOperations;
+	private DbOperationsServerStatus serverStatus;
+	
+	@Autowired
+	private DbOperationsDailyItemShop dailyItemShop;
 	
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -36,6 +41,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Override
 	@Cacheable("getStore")
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -47,6 +53,14 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.send();
 		
 		logger.info("APIs getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		
+		DailyItemShop dailyItemShopEntity = new DailyItemShop();
+		dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		dailyItemShopEntity.setData(httpResponse.bodyText());
+		dailyItemShop.save(dailyItemShopEntity);
+		
+		logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		
 		return httpResponse.bodyText();
 	}
 	
@@ -114,7 +128,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 
 	@Override
 	@Cacheable("getServerStatus")
-	@Scheduled(cron = "0 0/60 * * * ?")
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public String getServerStatus() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -127,10 +141,10 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 		
 		logger.info("APIs getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		
-		ServerStatus serverStatus = new ServerStatus();
-		serverStatus.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		serverStatus.setData(httpResponse.bodyText());
-		dbOperations.save(serverStatus);
+		ServerStatus serverStatusEntity = new ServerStatus();
+		serverStatusEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		serverStatusEntity.setData(httpResponse.bodyText());
+		serverStatus.save(serverStatusEntity);
 		
 		logger.info("DB stored getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		

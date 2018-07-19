@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fortnite.api.db.DbOperations;
+import com.fortnite.api.db.DbOperationsServerStatus;
 import com.fortnite.api.entity.ServerStatus;
 import com.fortnite.api.model.UserPojo;
 import com.fortnite.api.service.FortniteApisService;
