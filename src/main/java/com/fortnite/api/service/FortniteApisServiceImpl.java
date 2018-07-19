@@ -41,7 +41,6 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Override
 	@Cacheable("getStore")
-	@Scheduled(cron = "0 0/5 * * * ?")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -53,14 +52,6 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.send();
 		
 		logger.info("APIs getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-		
-		DailyItemShop dailyItemShopEntity = new DailyItemShop();
-		dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		dailyItemShopEntity.setData(httpResponse.bodyText());
-		dailyItemShop.save(dailyItemShopEntity);
-		
-		logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-		
 		return httpResponse.bodyText();
 	}
 	
@@ -128,7 +119,6 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 
 	@Override
 	@Cacheable("getServerStatus")
-	@Scheduled(cron = "0 0/5 * * * ?")
 	public String getServerStatus() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -140,14 +130,6 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.send();
 		
 		logger.info("APIs getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-		
-		ServerStatus serverStatusEntity = new ServerStatus();
-		serverStatusEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		serverStatusEntity.setData(httpResponse.bodyText());
-		serverStatus.save(serverStatusEntity);
-		
-		logger.info("DB stored getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-		
 		return httpResponse.bodyText();
 		
 		//"{\"status\":\"DOWN\",\"message\":\"Fortnite is up.\",\"version\":\"4.5\",\"time\":{\"since\":{\"seconds\":\"1530092223\"},\"duration\":{\"seconds\":859012,\"formated\":\"09 days, 22 hour, 36 minuts and 52 seconds\"}}}
@@ -184,7 +166,9 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 
 	@Override
 	@CacheEvict (allEntries = true)
-	public void clearCache() {	}
+	public void clearCache() {	
+		logger.info("Cache Clean! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+	}
 
 	@Override
 	@Cacheable("getBrChallenges")
@@ -201,6 +185,45 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 		
 		logger.info("APIs getBrChallenges triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
+		
+	}
+
+	@Override
+	@Scheduled(cron = "0 0/20 * * * ?")
+	public void insertDailyStore() {
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/store/get")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.form("language", "en")
+				.send();
+		
+		DailyItemShop dailyItemShopEntity = new DailyItemShop();
+		dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		dailyItemShopEntity.setData(httpResponse.bodyText());
+		dailyItemShop.save(dailyItemShopEntity);
+		
+		logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+	}
+
+	@Override
+	@Scheduled(cron = "0 0/20 * * * ?")
+	public void insertServerStatus() {
+		HttpResponse httpResponse = HttpRequest
+				.post("https://fortnite-public-api.theapinetwork.com/prod09/status/fortnite_server_status")
+				.header("Authorization", fortniteApiKey)
+				.contentType("multipart/form-data")
+				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
+				.form("language", "en")
+				.send();
+		
+		ServerStatus serverStatusEntity = new ServerStatus();
+		serverStatusEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		serverStatusEntity.setData(httpResponse.bodyText());
+		serverStatus.save(serverStatusEntity);
+		
+		logger.info("DB stored getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		
 	}
 
