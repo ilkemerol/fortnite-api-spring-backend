@@ -189,7 +189,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Scheduled(cron = "0 6 * * *")
+	@Scheduled(cron = "0 0 6 * * *", zone="Europe/Istanbul")
 	public void insertDailyStore() {
 		String responseBody = getStore();
 		logger.info("Response Body ### Value - {}", responseBody);
@@ -202,7 +202,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Scheduled(cron = "0 6 * * *")
+	@Scheduled(cron = "0 0 6 * * *", zone="Europe/Istanbul")
 	public void insertServerStatus() {
 		String responseBody = getServerStatus();
 		logger.info("Response Body ### Value - {}", responseBody);
