@@ -1,13 +1,16 @@
 package com.fortnite.api.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fortnite.api.model.Dummy;
+import com.fortnite.api.db.DbOperationsServerStatus;
+import com.fortnite.api.entity.ServerStatus;
 import com.fortnite.api.model.UserPojo;
-import com.fortnite.api.repository.DummyRepository;
 import com.fortnite.api.service.FortniteApisService;
 import com.google.gson.Gson;
 
@@ -17,9 +20,6 @@ public class ServiceController {
 	
 	@Autowired
 	private FortniteApisService service;
-	
-	@Autowired
-	private DummyRepository dummyRepository;
 	
 	@RequestMapping("/userId")
 	public String userId(@RequestParam(value="name", defaultValue="Ninja") String name) {
@@ -73,11 +73,4 @@ public class ServiceController {
 		service.clearCache();
 	}
 	
-	@RequestMapping("/saveDummyText")
-	public void saveDummyText(){
-			Dummy dummy1 = new Dummy();
-			dummy1.setTextdummy("emredummy2");
-			dummyRepository.save(dummy1);
-	}
-
 }
