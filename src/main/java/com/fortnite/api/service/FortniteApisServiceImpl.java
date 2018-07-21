@@ -40,7 +40,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	private String fortniteApiKey;
 	
 	@Override
-	@Cacheable("getStore")
+	//@Cacheable("getStore")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -50,6 +50,14 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
 				.form("language", "en")
 				.send();
+		
+		/* Manual DB Operation */
+		//DailyItemShop dailyItemShopEntity = new DailyItemShop();
+		//dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		//dailyItemShopEntity.setData(httpResponse.bodyText());
+		//dailyItemShop.save(dailyItemShopEntity);
+		//logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		/* /Manual DB Operation */
 		
 		logger.info("APIs getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
