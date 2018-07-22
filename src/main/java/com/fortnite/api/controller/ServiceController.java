@@ -34,18 +34,20 @@ public class ServiceController {
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	
-	
 	@RequestMapping("/userId")
 	public String userId(@RequestParam(value="name", defaultValue="Ninja") String name) {
         return service.getUserId(name);
     }
 	
 	@RequestMapping("/brDailyStore")
-	public String brDailyStore(){
-		String dbOperation = dbService.getDataWithDate("20-07-2018");
+	public String brDailyStore(@RequestParam(value = "storeDate", defaultValue = "01-01-1961") String storeDate){
+		String dbOperation = dbService.getDataWithDate(storeDate);
 		logger.info("DB Operation brDailyStore triggered! ### DB Response - {}", dbOperation);
-		
-		return service.getStore();
+		if(dbOperation == null) {
+			return service.getStore();
+		} else {
+			return dbOperation;
+		}
 	}
 	
 	@RequestMapping("/upComingItems")
