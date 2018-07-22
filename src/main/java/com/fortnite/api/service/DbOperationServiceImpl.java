@@ -1,18 +1,15 @@
 package com.fortnite.api.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fortnite.api.db.DbOperationsDailyItemShop;
-import com.fortnite.api.entity.DailyItemShop;
+import com.fortnite.api.repository.DbOperationsDailyItemShopRepository;
 
 @Service
 public class DbOperationServiceImpl implements DbOperationService{
 	
 	@Autowired
-	private DbOperationsDailyItemShop dbOperationDailyItemShop;
+	private DbOperationsDailyItemShopRepository dbOperationDailyItemShop;
 
 	@Override
 	public String getDataWithDate(String date) {
