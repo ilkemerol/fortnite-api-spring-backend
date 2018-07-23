@@ -38,7 +38,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	private String fortniteApiKey;
 	
 	@Override
-	//@Cacheable("getStore")
+	@Cacheable("getStore")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
