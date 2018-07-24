@@ -37,10 +37,10 @@ public class ServiceController {
 	}
 	
 	@RequestMapping("/playerStats")
-	public String playerStats(@RequestParam(value = "name", defaultValue = "Ninja") String name) {
+	public String playerStats(@RequestParam(value = "name", defaultValue = "Ninja") String name,@RequestParam(value = "season", defaultValue = "alltime") String season) {
 		Gson gson = new Gson();
 	    UserPojo obj  = gson.fromJson(service.getUserId(name), UserPojo.class);
-		return service.getPlayerStats(obj.getUid());
+		return service.getPlayerStats(obj.getUid(),season);
 	}
 	
 	@RequestMapping("/news")
