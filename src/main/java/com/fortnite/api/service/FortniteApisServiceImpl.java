@@ -93,7 +93,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	public String getPlayerStats(String userId) {
+	public String getPlayerStats(String userId, String season) {
 		
 		HttpResponse httpResponse = HttpRequest
 				.post("https://fortnite-public-api.theapinetwork.com/prod09/users/public/br_stats")
@@ -101,10 +101,11 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.contentType("multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW")
 				.form("user_id", userId)
 				.form("platform", "pc")
-				.form("window", "alltime")
+				.form("window", season)
 				.send();
 		
 		logger.info("APIs getPlayerStats triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		logger.info(httpResponse.bodyText());
 		return httpResponse.bodyText();
 	}
 
