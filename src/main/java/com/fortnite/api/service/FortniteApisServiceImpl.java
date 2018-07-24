@@ -13,12 +13,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.fortnite.api.db.DbOperationsDailyItemShop;
-import com.fortnite.api.db.DbOperationsServerStatus;
+import com.fortnite.api.repository.DbOperationsDailyItemShopRepository;
+import com.fortnite.api.repository.DbOperationsServerStatusRepository;
 import com.fortnite.api.entity.DailyItemShop;
 import com.fortnite.api.entity.ServerStatus;
-import com.fortnite.api.model.JsonObject;
-import com.fortnite.api.util.ApiKeyUtil;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
@@ -28,10 +26,10 @@ import jodd.http.HttpResponse;
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Autowired
-	private DbOperationsServerStatus serverStatus;
+	private DbOperationsServerStatusRepository serverStatus;
 	
 	@Autowired
-	private DbOperationsDailyItemShop dailyItemShop;
+	private DbOperationsDailyItemShopRepository dailyItemShop;
 	
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -40,7 +38,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	private String fortniteApiKey;
 	
 	@Override
-	@Cacheable("getStore")
+	//@Cacheable("getStore")
 	public String getStore() {
 		
 		HttpResponse httpResponse = HttpRequest
@@ -50,6 +48,14 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.header("boundary", "----WebKitFormBoundary7MA4YWxkTrZu0gW")
 				.form("language", "en")
 				.send();
+		
+		/* Manual DB Operation */
+		//DailyItemShop dailyItemShopEntity = new DailyItemShop();
+		//dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
+		//dailyItemShopEntity.setData(httpResponse.bodyText());
+		//dailyItemShop.save(dailyItemShopEntity);
+		//logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
+		/* /Manual DB Operation */
 		
 		logger.info("APIs getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
