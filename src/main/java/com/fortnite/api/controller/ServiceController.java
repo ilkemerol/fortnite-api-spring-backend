@@ -1,5 +1,6 @@
 package com.fortnite.api.controller;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class ServiceController {
 	private DbOperationService dbService;
 	
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
-	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	
 	@RequestMapping("/userId")
 	public String userId(@RequestParam(value="name", defaultValue="Ninja") String name) {
@@ -35,6 +36,7 @@ public class ServiceController {
 	
 	@RequestMapping("/brDailyStore")
 	public String brDailyStore(@RequestParam(value = "storeDate", defaultValue = "01-01-1961") String storeDate){
+		storeDate = dateTimeFormatter.format(LocalDateTime.now());
 		String dbOperation = dbService.getDataWithDate(storeDate);
 		logger.info("DB Operation brDailyStore triggered! ### DB Response - {}", dbOperation);
 		if(dbOperation == null) {
@@ -76,8 +78,8 @@ public class ServiceController {
 		return service.getPatchNotes();
 	}
 	
-	@RequestMapping("/BrChallenges")
-	public String getBrChallenges(){
+	@RequestMapping("/brChallenges")
+	public String brChallenges(){
 		return service.getBrChallenges();
 	}
 	

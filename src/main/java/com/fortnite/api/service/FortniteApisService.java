@@ -26,7 +26,7 @@ public interface FortniteApisService {
 	public void clearCache();
 	
 	/* Cron Job Method */
-	public void insertDailyStore();
+	public void insertDailyStore(String responseBody);
 	
 	public void insertServerStatus();
 }
