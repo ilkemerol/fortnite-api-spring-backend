@@ -7,4 +7,7 @@ import com.fortnite.api.entity.DailyItemShop;
 public interface DbOperationService {
 
 	public String getDataWithDate(String date);
+	
+	public String checkItemWithName(String itemName);
+
 }

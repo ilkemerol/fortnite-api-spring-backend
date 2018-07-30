@@ -1,5 +1,6 @@
 package com.fortnite.api.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fortnite.api.model.UserPojo;
 import com.fortnite.api.service.DbOperationService;
 import com.fortnite.api.service.FortniteApisService;
@@ -35,12 +38,18 @@ public class ServiceController {
     }
 	
 	@RequestMapping("/brDailyStore")
-	public String brDailyStore(@RequestParam(value = "storeDate", defaultValue = "01-01-1961") String storeDate){
-		storeDate = dateTimeFormatter.format(LocalDateTime.now());
+	public String brDailyStore(@RequestParam(value = "storeDate", defaultValue = "01-01-1961") String storeDate) throws JsonParseException, JsonMappingException, IOException{
 		String dbOperation = dbService.getDataWithDate(storeDate);
 		logger.info("DB Operation brDailyStore triggered! ### DB Response - {}", dbOperation);
 		if(dbOperation == null) {
-			return service.getStore();
+			storeDate = dateTimeFormatter.format(LocalDateTime.now());
+			dbOperation = dbService.getDataWithDate(storeDate);
+			logger.info("DB Operation brDailyStore triggered! ### DB Response - {}", dbOperation);
+			if(dbOperation == null) {
+				return service.getStore();
+			} else {
+				return dbOperation;
+			}
 		} else {
 			return dbOperation;
 		}
