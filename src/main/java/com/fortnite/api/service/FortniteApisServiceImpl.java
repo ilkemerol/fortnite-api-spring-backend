@@ -1,5 +1,6 @@
 package com.fortnite.api.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,10 +14,19 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.fortnite.api.repository.DbOperationItemHistoryRepository;
+import com.fortnite.api.repository.DbOperationItemRepository;
 import com.fortnite.api.repository.DbOperationsDailyItemShopRepository;
 import com.fortnite.api.repository.DbOperationsServerStatusRepository;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortnite.api.entity.DailyItemShop;
+import com.fortnite.api.entity.ItemHistoryEntity;
+import com.fortnite.api.entity.ItemsEntity;
 import com.fortnite.api.entity.ServerStatus;
+import com.fortnite.api.itemshop.Items;
+import com.fortnite.api.model.ItemShopDTO;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
@@ -26,10 +36,19 @@ import jodd.http.HttpResponse;
 public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Autowired
+	private DbOperationService dbService;
+	
+	@Autowired
 	private DbOperationsServerStatusRepository serverStatus;
 	
 	@Autowired
 	private DbOperationsDailyItemShopRepository dailyItemShop;
+	
+	@Autowired
+	private DbOperationItemRepository itemDb;
+	
+	@Autowired
+	private DbOperationItemHistoryRepository itemHistory;
 	
 	static final Logger logger = LoggerFactory.getLogger(FortniteApisServiceImpl.class.getName());
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -39,7 +58,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	
 	@Override
 	@Cacheable("getStore")
-	public String getStore() {
+	public String getStore() throws JsonParseException, JsonMappingException, IOException {
 		
 		HttpResponse httpResponse = HttpRequest
 				.post("https://fortnite-public-api.theapinetwork.com/prod09/store/get")
@@ -49,14 +68,8 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				.form("language", "en")
 				.send();
 		
-		/* Manual DB Operation */
-		//DailyItemShop dailyItemShopEntity = new DailyItemShop();
-		//dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
-		//dailyItemShopEntity.setData(httpResponse.bodyText());
-		//dailyItemShop.save(dailyItemShopEntity);
-		//logger.info("DB stored getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-		/* /Manual DB Operation */
-		
+		insertDailyStore(httpResponse.bodyText());
+		insertDailyStoreItems(httpResponse.bodyText());
 		logger.info("APIs getStore triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		return httpResponse.bodyText();
 	}
@@ -196,11 +209,8 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	}
 
 	@Override
-	@Scheduled(cron = "0 0 6 * * *", zone="Europe/Istanbul")
-	public void insertDailyStore() {
-		String responseBody = getStore();
+	public void insertDailyStore(String responseBody) {
 		logger.info("Response Body ### Value - {}", responseBody);
-		
 		DailyItemShop dailyItemShopEntity = new DailyItemShop();
 		dailyItemShopEntity.setDate(dateTimeFormatter.format(LocalDateTime.now()).toString());
 		dailyItemShopEntity.setData(responseBody);
@@ -220,6 +230,37 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 		serverStatus.save(serverStatusEntity);
 		logger.info("DB stored getServerStatus triggered! ### Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 		
+	}
+
+	@Override
+	public void insertDailyStoreItems(String responseBody) throws JsonParseException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		ItemShopDTO itemShopDTO = mapper.readValue(responseBody, ItemShopDTO.class);
+		
+		for( Items item : itemShopDTO.getItems()) {
+			ItemsEntity itemsEntity = new ItemsEntity();
+			String dbCheckId = dbService.checkItemWithName(item.getName());
+			if(dbCheckId != null){
+				ItemHistoryEntity itemHistoryEntity = new ItemHistoryEntity();
+				itemHistoryEntity.setName(item.getName());
+				itemHistoryEntity.setDate(itemShopDTO.getDate());
+				itemHistory.save(itemHistoryEntity);
+				logger.info("Item existed in Items Table ### Insert only ItemHistory Table ###");
+			} else {
+				itemsEntity.setName(item.getName());
+				itemsEntity.setCost(item.getCost());
+				itemsEntity.setImage(item.getItem().getImage());
+				itemsEntity.setType(item.getItem().getType());
+				itemsEntity.setRarity(item.getItem().getRarity());
+				itemDb.save(itemsEntity);
+				logger.info("New Item ### Insert in Items Table ###");
+				ItemHistoryEntity itemHistoryEntity = new ItemHistoryEntity();
+				itemHistoryEntity.setName(item.getName());
+				itemHistoryEntity.setDate(itemShopDTO.getDate());
+				itemHistory.save(itemHistoryEntity);
+				logger.info("New Item Date ### Insert in Item History Table ###");
+			}
+		}
 	}
 
 }
