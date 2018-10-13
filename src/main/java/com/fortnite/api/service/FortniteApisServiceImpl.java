@@ -19,6 +19,7 @@ import com.fortnite.api.repository.DbOperationItemRepository;
 import com.fortnite.api.repository.DbOperationsDailyItemShopRepository;
 import com.fortnite.api.repository.DbOperationsServerStatusRepository;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fortnite.api.entity.DailyItemShop;
@@ -234,6 +235,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 	@Override
 	public void insertDailyStoreItems(String responseBody) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		ItemShopDTO itemShopDTO = mapper.readValue(responseBody, ItemShopDTO.class);
 		
 		for( Items item : itemShopDTO.getItems()) {
@@ -244,7 +246,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				itemHistoryEntity.setName(item.getName());
 				itemHistoryEntity.setDate(itemShopDTO.getDate());
 				itemHistory.save(itemHistoryEntity);
-				logger.info("Item existed in Items Table ### Insert only ItemHistory Table ###");
+				logger.info("Item existed in Items Table ### Insert only ItemHistory Table ###" + item.getName());
 			} else {
 				itemsEntity.setName(item.getName());
 				itemsEntity.setCost(item.getCost());
@@ -252,7 +254,7 @@ public class FortniteApisServiceImpl implements FortniteApisService{
 				itemsEntity.setType(item.getItem().getType());
 				itemsEntity.setRarity(item.getItem().getRarity());
 				itemDb.save(itemsEntity);
-				logger.info("New Item ### Insert in Items Table ###");
+				logger.info("New Item ### Insert in Items Table ###" + item.getName());
 				ItemHistoryEntity itemHistoryEntity = new ItemHistoryEntity();
 				itemHistoryEntity.setName(item.getName());
 				itemHistoryEntity.setDate(itemShopDTO.getDate());
