@@ -42,14 +42,7 @@ public class ServiceController {
 		String dbOperation = dbService.getDataWithDate(storeDate);
 		logger.info("DB Operation brDailyStore triggered! ### DB Response - {}", dbOperation);
 		if(dbOperation == null) {
-			storeDate = dateTimeFormatter.format(LocalDateTime.now());
-			dbOperation = dbService.getDataWithDate(storeDate);
-			logger.info("DB Operation brDailyStore triggered! ### DB Response - {}", dbOperation);
-			if(dbOperation == null) {
-				return service.getStore();
-			} else {
-				return dbOperation;
-			}
+			return service.getStore();
 		} else {
 			return dbOperation;
 		}
